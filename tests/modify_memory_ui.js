@@ -6,7 +6,7 @@ class Test extends BaseTest {
     description = "Tests modifying game memory from the Cetus UI";
 
     async run(browser, extPage) {
-        const gamePage = await launchGame(browser, 'http://localhost/main.html');
+        const gamePage = await launchGame(browser, 'http://localhost:8080/main.html');
         await sleep(1000);
 
         const className = await getElementProperty(extPage, "#lockOverlay", "className");
