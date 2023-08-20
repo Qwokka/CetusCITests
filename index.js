@@ -7,7 +7,7 @@ const checkTestResult = function(condition, test, failMessage) {
         console.error(`[-] Test \"${test.name}\" failed: ${failMessage}`);
 
         if (!args.continueAfterFail) {
-            process.exit();
+            process.exit(1);
         }
     }
     else {
@@ -66,3 +66,5 @@ for (let i = 0; i < files.length; i++) {
 
     await browser.close();
 }
+
+process.exit(0);
