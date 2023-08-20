@@ -21,6 +21,8 @@ const launchBrowser = async function(cetusDir) {
         args: [
             "--disable-extensions-except=" + cetusDir,
             "--load-extension=" + cetusDir,
+            '--no-sandbox',
+            '--disable-setuid-sandbox'
         ],
     });
 
