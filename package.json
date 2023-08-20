@@ -1,0 +1,17 @@
+{
+  "name": "cetustests",
+  "version": "0.0.1",
+  "description": "Regression testing for Cetus (https://github.com/Qwokka/Cetus)",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "argparse": "^2.0.1",
+    "glob": "^10.3.3",
+    "puppeteer": "^21.1.0"
+  },
+  "type": "module"
+}
