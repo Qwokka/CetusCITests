@@ -17,7 +17,7 @@ const checkTestResult = function(condition, test, failMessage) {
 
 const launchBrowser = async function(cetusDir) {
     const browser = await puppeteer.launch({
-        headless: false,
+        headless: "new",
         args: [
             "--disable-extensions-except=" + cetusDir,
             "--load-extension=" + cetusDir,
