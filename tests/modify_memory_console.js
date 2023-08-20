@@ -1,5 +1,5 @@
 import BaseTest from '../base_test.js';
-import { sleep, launchGame } from '../utils.js';
+import { getElementProperty, sleep, launchGame } from '../utils.js';
 
 class Test extends BaseTest {
     name = "Modify Memory (Console)";
