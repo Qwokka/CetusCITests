@@ -4,7 +4,7 @@ import { ExtensionPage } from './base_test.js';
 import { createPage } from './utils.js';
 import puppeteer from 'puppeteer';
 
-const launchBrowser = async function(cetusDir) {
+const launchBrowser = async function(cetusDir, type) {
     const browser = await puppeteer.launch({
         headless: "new",
         args: [
@@ -20,7 +20,18 @@ const launchBrowser = async function(cetusDir) {
     const partialExtensionUrl = extensionTarget.url() || '';
     const extensionId = partialExtensionUrl.split('/')[2];
 
-    const extensionUrl = `chrome-extension://${extensionId}/extension/devpanelview.html`;
+    let extensionUrl;
+
+    if (type === "devpanel") {
+        extensionUrl = `chrome-extension://${extensionId}/extension/devpanelview.html`;
+    }
+    else if (type === "popup") {
+        extensionUrl = `chrome-extension://${extensionId}/extension/popupview.html`;
+    }
+    else {
+        throw new Error(`Unexpected type: \"${type}\"`);
+    }
+
     const newPage = await createPage(browser, extensionUrl);
     const extPage = new ExtensionPage(newPage);
 
@@ -41,33 +52,35 @@ const args = argParser.parse_args();
 
 const files = globSync("./tests/*.js");
 
-for (let i = 0; i < files.length; i++) {
-    const thisFile = files[i];
+for (let panelType of [ "devpanel", "popup" ]) {
+    for (let i = 0; i < files.length; i++) {
+        const thisFile = files[i];
 
-    const { browser, extPage } = await launchBrowser(args.directory);
+        const { browser, extPage } = await launchBrowser(args.directory, panelType);
 
-    const Test = (await import(`./${thisFile}`)).default;
-    const currentTest = new Test();
+        const Test = (await import(`./${thisFile}`)).default;
+        const currentTest = new Test();
 
-    console.log(`[*] Running test ${currentTest.name}`);
+        console.log(`[*] Running test ${currentTest.name} for view \"${panelType}\"`);
 
-    try {
-        const result = await currentTest.run(browser, extPage);
+        try {
+            const result = await currentTest.run(browser, extPage);
 
-        if (result !== true) {
-            throw new Error(result);
+            if (result !== true) {
+                throw new Error(result);
+            }
+
+            console.log(`[+] Test \"${currentTest.name}\" succeeded`);
+        } catch (e) {
+            console.error(`[-] Test \"${currentTest.name}\" failed: ${e.message}`);
+
+            if (!args.continueAfterFail) {
+                process.exit(1);
+            }
         }
 
-        console.log(`[+] Test \"${currentTest.name}\" succeeded`);
-    } catch (e) {
-        console.error(`[-] Test \"${currentTest.name}\" failed: ${e.message}`);
-
-        if (!args.continueAfterFail) {
-            process.exit(1);
-        }
+        await browser.close();
     }
-
-    await browser.close();
 }
 
 process.exit(0);
