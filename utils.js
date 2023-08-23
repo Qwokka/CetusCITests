@@ -4,18 +4,10 @@ const sleep = function(ms) {
     });
 }
 
-const launchGame = async function(browser, gameUrl) {
-    const gamePage = await browser.newPage();
-    await gamePage.goto(gameUrl, { waitUntil: 'load' });
-    gamePage.bringToFront();
-
-    return gamePage;
+const createPage = async function(browser, url) {
+    const page = await browser.newPage();
+    await page.goto(url, { waitUntil: 'load' });
+    return page;
 }
 
-const getElementProperty = async function(page, selector, propertyName) {
-    const element = await page.$(selector);
-    const elementProperty = await element.getProperty(propertyName);
-    return await elementProperty.jsonValue();
-}
-
-export { getElementProperty, sleep, launchGame }
+export { sleep, createPage }

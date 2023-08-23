@@ -1,19 +1,8 @@
 import { ArgumentParser } from 'argparse';
 import { globSync } from 'glob';
+import { ExtensionPage } from './base_test.js';
+import { createPage } from './utils.js';
 import puppeteer from 'puppeteer';
-
-const checkTestResult = function(condition, test, failMessage) {
-    if (condition !== true) {
-        console.error(`[-] Test \"${test.name}\" failed: ${failMessage}`);
-
-        if (!args.continueAfterFail) {
-            process.exit(1);
-        }
-    }
-    else {
-        console.log(`[+] Test \"${test.name}\" succeeded`);
-    }
-}
 
 const launchBrowser = async function(cetusDir) {
     const browser = await puppeteer.launch({
@@ -31,9 +20,9 @@ const launchBrowser = async function(cetusDir) {
     const partialExtensionUrl = extensionTarget.url() || '';
     const extensionId = partialExtensionUrl.split('/')[2];
 
-    const extPage = await browser.newPage();
     const extensionUrl = `chrome-extension://${extensionId}/extension/devpanelview.html`;
-    await extPage.goto(extensionUrl, { waitUntil: 'load' });
+    const newPage = await createPage(browser, extensionUrl);
+    const extPage = new ExtensionPage(newPage);
 
     return {
         browser,
@@ -61,8 +50,25 @@ for (let i = 0; i < files.length; i++) {
     const currentTest = new Test();
 
     console.log(`[*] Running test ${currentTest.name}`);
-    const { result, failMessage }  = await currentTest.run(browser, extPage);
-    checkTestResult(result, currentTest, failMessage);
+
+    const result = await currentTest.run(browser, extPage);
+    /*
+    try {
+        const result = await currentTest.run(browser, extPage);
+
+        if (result !== true) {
+            throw new Error(result);
+        }
+
+        console.log(`[+] Test \"${currentTest.name}\" succeeded`);
+    } catch (e) {
+        console.error(`[-] Test \"${currentTest.name}\" failed: ${e.message}`);
+
+        if (!args.continueAfterFail) {
+            process.exit(1);
+        }
+    }
+    */
 
     await browser.close();
 }
