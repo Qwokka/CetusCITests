@@ -3,7 +3,7 @@ import { sleep } from './utils.js';
 class BaseTest {
     name = "Base Test";
     description = "Base Description";
-    failMessage = "Base Fail Message";
+    usesUi = true;
 
     async run(browser, extPage) {
         assert(false);

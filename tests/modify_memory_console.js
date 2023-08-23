@@ -4,6 +4,7 @@ import { createPage } from '../utils.js';
 class Test extends BaseTest {
     name = "Modify Memory (Console)";
     description = "Tests modifying game memory from the console API";
+    usesUi = false;
 
     async run(browser, extPage) {
         const newPage = await createPage(browser, 'http://localhost:8080/main.html');

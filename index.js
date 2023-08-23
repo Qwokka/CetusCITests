@@ -41,6 +41,26 @@ const launchBrowser = async function(cetusDir, type) {
     };
 }
 
+const runTest = async function(browser, extPage, test) {
+    try {
+        const result = await test.run(browser, extPage);
+
+        if (result !== true) {
+            throw new Error(result);
+        }
+
+        console.log(`[+] Test \"${test.name}\" succeeded`);
+    } catch (e) {
+        console.error(`[-] Test \"${test.name}\" failed: ${e.message}`);
+
+        if (!args.continueAfterFail) {
+            process.exit(1);
+        }
+    }
+
+    await browser.close();
+}
+
 const argParser = new ArgumentParser({
     description: "Regression testing for Cetus (https://github.com/Qwokka/Cetus)"
 });
@@ -52,35 +72,25 @@ const args = argParser.parse_args();
 
 const files = globSync("./tests/*.js");
 
-for (let panelType of [ "devpanel", "popup" ]) {
-    for (let i = 0; i < files.length; i++) {
-        const thisFile = files[i];
+for (let i = 0; i < files.length; i++) {
+    const thisFile = files[i];
 
-        const { browser, extPage } = await launchBrowser(args.directory, panelType);
+    const Test = (await import(`./${thisFile}`)).default;
+    const currentTest = new Test();
 
-        const Test = (await import(`./${thisFile}`)).default;
-        const currentTest = new Test();
+    // If the test requires the UI, we run it twice (Once per view)
+    if (currentTest.usesUi) {
+        for (let panelType of [ "devpanel", "popup" ]) {
+            const { browser, extPage } = await launchBrowser(args.directory, panelType);
 
-        console.log(`[*] Running test ${currentTest.name} for view \"${panelType}\"`);
-
-        try {
-            const result = await currentTest.run(browser, extPage);
-
-            if (result !== true) {
-                throw new Error(result);
-            }
-
-            console.log(`[+] Test \"${currentTest.name}\" succeeded`);
-        } catch (e) {
-            console.error(`[-] Test \"${currentTest.name}\" failed: ${e.message}`);
-
-            if (!args.continueAfterFail) {
-                process.exit(1);
-            }
+            console.log(`[*] Running test ${currentTest.name} for view \"${panelType}\"`);
+            runTest(browser, extPage, currentTest)
         }
+    }
+    else {
+        const { browser, extPage } = await launchBrowser(args.directory, "devpanel");
 
-        await browser.close();
+        console.log(`[*] Running test ${currentTest.name}`);
+        runTest(browser, extPage, currentTest)
     }
 }
-
-process.exit(0);
