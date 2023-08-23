@@ -50,6 +50,8 @@ class Test extends BaseTest {
         if (queryResult !== 1234) {
             throw new Error("Memory unfreeze failed");
         }
+
+        return true;
     }
 };
 

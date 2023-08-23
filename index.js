@@ -51,8 +51,6 @@ for (let i = 0; i < files.length; i++) {
 
     console.log(`[*] Running test ${currentTest.name}`);
 
-    const result = await currentTest.run(browser, extPage);
-    /*
     try {
         const result = await currentTest.run(browser, extPage);
 
@@ -68,7 +66,6 @@ for (let i = 0; i < files.length; i++) {
             process.exit(1);
         }
     }
-    */
 
     await browser.close();
 }
