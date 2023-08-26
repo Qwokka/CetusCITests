@@ -84,7 +84,7 @@ for (let i = 0; i < files.length; i++) {
             const { browser, extPage } = await launchBrowser(args.directory, panelType);
 
             console.log(`[*] Running test ${currentTest.name} for view \"${panelType}\"`);
-            runTest(browser, extPage, currentTest)
+            await runTest(browser, extPage, currentTest)
         }
     }
     else {

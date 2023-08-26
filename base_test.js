@@ -102,7 +102,7 @@ class GamePage extends WebPage {
     async consoleSearch(comparator, type, memAlign, searchParam) {
         try {
             return await this.page.evaluate(function(comparator, type, memAlign, searchParam) {
-                return cetusInstances.get(1).search(comparator, type, memAlign, searchParam);
+                return cetusInstances.get(0).search(comparator, type, memAlign, searchParam);
             }, comparator, type, memAlign, searchParam);
         } catch (e) {
             throw new Error("Memory search failed");
@@ -111,13 +111,13 @@ class GamePage extends WebPage {
 
     async consoleQueryMemory(address, type) {
         return await this.page.evaluate(function(queryAddress, type) {
-            return cetusInstances.get(1).queryMemory(queryAddress, type);
+            return cetusInstances.get(0).queryMemory(queryAddress, type);
         }, address, type);
     }
 
     async consoleModifyMemory(address, value, type) {
         return await this.page.evaluate(function(modifyAddress, value, type) {
-            cetusInstances.get(1).modifyMemory(modifyAddress, value, type);
+            cetusInstances.get(0).modifyMemory(modifyAddress, value, type);
         }, address, value, type);
     }
 }
