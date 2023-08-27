@@ -14,7 +14,7 @@ Automated tests for Cetus (https://github.com/Qwokka/Cetus)
     
 - [x] Memory searching via `Cetus.search()`
 - [x] Memory searching via UI
-- [ ] String search via `Cetus.strings()`
+- [x] String search via `Cetus.strings()`
 - [ ] String search via UI
 - [ ] Add bookmarks via `Cetus.addBookmark()`
 - [x] Add bookmarks via UI

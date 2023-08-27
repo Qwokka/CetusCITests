@@ -5,7 +5,6 @@ import { createPage } from './utils.js';
 import puppeteer from 'puppeteer';
 
 const PANEL_TYPES = [ "devpanel", "popup" ];
-// TODO Also handle "WebAssembly.Module()" combined with "WebAssembly.Instance()"
 const INSTANTIATE_METHODS = [ "instantiate", "instantiateStreaming" ];
 
 const launchBrowser = async function(cetusDir, type) {
@@ -46,7 +45,7 @@ const launchBrowser = async function(cetusDir, type) {
 }
 
 const runTest = async function(currentTest, panelType = null) {
-    for (let instantiateMethod of INSTANTIATE_METHODS) {
+    for (let instantiateMethod of currentTest.instantiationMethods) {
         const { browser, extPage } = await launchBrowser(args.directory, panelType === null ? "devpanel" : panelType);
 
         if (panelType !== null) {

@@ -4,6 +4,8 @@ class BaseTest {
     name = "Base Test";
     description = "Base Description";
     usesUi = true;
+    // TODO Also handle "WebAssembly.Module()" combined with "WebAssembly.Instance()"
+    instantiationMethods = [ "instantiate", "instantiateStreaming" ];
 
     async run(browser, extPage, method) {
         assert(false);
@@ -104,6 +106,16 @@ class GamePage extends WebPage {
             return await this.page.evaluate(function(comparator, type, memAlign, searchParam) {
                 return cetusInstances.get(0).search(comparator, type, memAlign, searchParam);
             }, comparator, type, memAlign, searchParam);
+        } catch (e) {
+            throw new Error("Memory search failed");
+        }
+    }
+
+    async consoleStringSearch(minLen) {
+        try {
+            return await this.page.evaluate(function(minLen) {
+                return cetusInstances.get(0).strings(minLen);
+            }, minLen);
         } catch (e) {
             throw new Error("Memory search failed");
         }

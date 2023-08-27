@@ -4,6 +4,7 @@ import { createGamePage, createPage, sleep } from '../utils.js';
 class Test extends BaseTest {
     name = "Modify Memory (UI)";
     description = "Tests modifying game memory from the Cetus UI";
+    instantiationMethods = [ "instantiate" ];
 
     async run(browser, extPage, method) {
         const gamePage = await createGamePage(browser, "simple", method);

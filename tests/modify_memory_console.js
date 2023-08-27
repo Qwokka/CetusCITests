@@ -5,6 +5,7 @@ class Test extends BaseTest {
     name = "Modify Memory (Console)";
     description = "Tests modifying game memory from the console API";
     usesUi = false;
+    instantiationMethods = [ "instantiate" ];
 
     async run(browser, extPage, method) {
         const gamePage = await createGamePage(browser, "simple", method);
