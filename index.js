@@ -4,6 +4,10 @@ import { ExtensionPage } from './base_test.js';
 import { createPage } from './utils.js';
 import puppeteer from 'puppeteer';
 
+const PANEL_TYPES = [ "devpanel", "popup" ];
+// TODO Also handle "WebAssembly.Module()" combined with "WebAssembly.Instance()"
+const INSTANTIATE_METHODS = [ "instantiate", "instantiateStreaming" ];
+
 const launchBrowser = async function(cetusDir, type) {
     const browser = await puppeteer.launch({
         headless: "new",
@@ -41,24 +45,35 @@ const launchBrowser = async function(cetusDir, type) {
     };
 }
 
-const runTest = async function(browser, extPage, test) {
-    try {
-        const result = await test.run(browser, extPage);
+const runTest = async function(currentTest, panelType = null) {
+    for (let instantiateMethod of INSTANTIATE_METHODS) {
+        const { browser, extPage } = await launchBrowser(args.directory, panelType === null ? "devpanel" : panelType);
 
-        if (result !== true) {
-            throw new Error(result);
+        if (panelType !== null) {
+            console.log(`[*] Running test ${currentTest.name} for view \"${panelType}\" and method \"${instantiateMethod}\"`);
+        }
+        else {
+            console.log(`[*] Running test ${currentTest.name} for method \"${instantiateMethod}\"`);
         }
 
-        console.log(`[+] Test \"${test.name}\" succeeded`);
-    } catch (e) {
-        console.error(`[-] Test \"${test.name}\" failed: ${e.message}`);
+        try {
+            const result = await currentTest.run(browser, extPage, instantiateMethod);
 
-        if (!args.continueAfterFail) {
-            process.exit(1);
+            if (result !== true) {
+                throw new Error(result);
+            }
+
+            console.log(`[+] Test \"${currentTest.name}\" succeeded`);
+        } catch (e) {
+            console.error(`[-] Test \"${currentTest.name}\" failed: ${e.message}`);
+
+            if (!args.continueAfterFail) {
+                process.exit(1);
+            }
         }
+
+        await browser.close();
     }
-
-    await browser.close();
 }
 
 const argParser = new ArgumentParser({
@@ -80,17 +95,11 @@ for (let i = 0; i < files.length; i++) {
 
     // If the test requires the UI, we run it twice (Once per view)
     if (currentTest.usesUi) {
-        for (let panelType of [ "devpanel", "popup" ]) {
-            const { browser, extPage } = await launchBrowser(args.directory, panelType);
-
-            console.log(`[*] Running test ${currentTest.name} for view \"${panelType}\"`);
-            await runTest(browser, extPage, currentTest)
+        for (let panelType of PANEL_TYPES) {
+            await runTest(currentTest, panelType)
         }
     }
     else {
-        const { browser, extPage } = await launchBrowser(args.directory, "devpanel");
-
-        console.log(`[*] Running test ${currentTest.name}`);
-        runTest(browser, extPage, currentTest)
+        await runTest(currentTest)
     }
 }

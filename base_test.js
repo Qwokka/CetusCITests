@@ -5,7 +5,7 @@ class BaseTest {
     description = "Base Description";
     usesUi = true;
 
-    async run(browser, extPage) {
+    async run(browser, extPage, method) {
         assert(false);
     }
 }

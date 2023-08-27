@@ -1,14 +1,13 @@
-import { ExtensionPage, GamePage, BaseTest } from '../base_test.js';
-import { createPage } from '../utils.js';
+import { BaseTest } from '../base_test.js';
+import { createGamePage } from '../utils.js';
 
 class Test extends BaseTest {
     name = "Modify Memory (Console)";
     description = "Tests modifying game memory from the console API";
     usesUi = false;
 
-    async run(browser, extPage) {
-        const newPage = await createPage(browser, 'http://localhost:8080/main.html');
-        const gamePage = new GamePage(newPage);
+    async run(browser, extPage, method) {
+        const gamePage = await createGamePage(browser, "simple", method);
 
         await extPage.assertUnlocked();
         await gamePage.assertInitialized();

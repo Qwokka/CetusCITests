@@ -1,13 +1,12 @@
-import { ExtensionPage, GamePage, BaseTest } from '../base_test.js';
-import { createPage, sleep } from '../utils.js';
+import { BaseTest } from '../base_test.js';
+import { createGamePage, createPage, sleep } from '../utils.js';
 
 class Test extends BaseTest {
     name = "Modify Memory (UI)";
     description = "Tests modifying game memory from the Cetus UI";
 
-    async run(browser, extPage) {
-        const newPage = await createPage(browser, 'http://localhost:8080/main.html');
-        const gamePage = new GamePage(newPage);
+    async run(browser, extPage, method) {
+        const gamePage = await createGamePage(browser, "simple", method);
 
         await extPage.assertUnlocked();
         await gamePage.assertInitialized();
