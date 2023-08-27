@@ -7,7 +7,7 @@ Automated tests for Cetus (https://github.com/Qwokka/Cetus)
 
 - [x] Binary loading via `WebAssembly.instantiateStreaming()`
 - [ ] Binary loading via `WebAssembly.instantiate()`
-- [ ] Binary loading via `WebAssembly.Compile()` and `WebAssembly.Instance()`
+- [ ] Binary loading via `WebAssembly.Module()` and `WebAssembly.Instance()`
 - [ ] Load multiple concurrent WASM instances
 
 ### Memory Search/Modification
