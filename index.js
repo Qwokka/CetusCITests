@@ -80,11 +80,19 @@ const argParser = new ArgumentParser({
 });
 
 argParser.add_argument('-d', '--directory', { help: "Path to Cetus directory", required: true });
+argParser.add_argument('-t', '--test', { help: "Run a single test" });
 argParser.add_argument('-c', '--continue', { help: "Do not abort on failed test", action: "store_true", dest: "continueAfterFail" });
 
 const args = argParser.parse_args();
 
-const files = globSync("./tests/*.js");
+let files;
+
+if (args.test) {
+    files = [ "./tests/" + args.test + ".js" ];
+}
+else {
+    files = globSync("./tests/*.js");
+}
 
 for (let i = 0; i < files.length; i++) {
     const thisFile = files[i];
