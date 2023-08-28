@@ -8,7 +8,7 @@ Automated tests for Cetus (https://github.com/Qwokka/Cetus)
 - [x] Binary loading via `WebAssembly.instantiateStreaming()`
 - [x] Binary loading via `WebAssembly.instantiate()`
 - [ ] Binary loading via `WebAssembly.Module()` and `WebAssembly.Instance()`
-- [ ] Load multiple concurrent WASM instances
+- [x] Load multiple concurrent WASM instances
 
 ### Memory Search/Modification
     
@@ -29,7 +29,7 @@ Automated tests for Cetus (https://github.com/Qwokka/Cetus)
 - [x] Freeze/unfreeze memory
 - [ ] Set/unset read watchpoint
 - [ ] Set/unset write watchpoint
-- [ ] Set multiple concurrent watchpoints in a single WASM instance
+- [x] Set multiple concurrent watchpoints in a single WASM instance
 - [ ] Set multiple concurrent watchpoints in separate WASM instances
 
 ### Speedhack

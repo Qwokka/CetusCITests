@@ -31,8 +31,8 @@ class Test extends BaseTest {
         }
 
         // Freeze and modify value
-        await extPage.clickElement("#bookmarks tbody>tr:nth-child(1)>td:nth-child(3)>button");
-        await extPage.changeInputValue("#bookmarks tbody>tr:nth-child(1)>td:nth-child(2)>input", "1337");
+        await extPage.bookmarkToggleFreeze(0);
+        await extPage.modifyBookmarkValue(0, 1337);
 
         await sleep(1500);
 

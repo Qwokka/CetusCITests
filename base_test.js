@@ -70,7 +70,7 @@ class ExtensionPage extends WebPage {
 
     // TODO Support changing comparator and type
     async uiSearch(searchValue, waitTime = 1000) {
-        this.setElementProperty("#searchParam", "value", searchValue);
+        this.changeInputValue("#searchParam", searchValue);
         this.clickElement("[name='search']");
 
         await sleep(waitTime);
@@ -78,13 +78,13 @@ class ExtensionPage extends WebPage {
         return await this.getElements("[name='saveBtn']");
     }
 
-    async getBookmarks() {
-        return await this.getElements("#bookmarks tbody>tr");
+    async uiRestartSearch() {
+        await this.clickElement("#restartBtn");
     }
 
     // TODO Support changing string type
     async uiStringSearch(minLen, waitTime = 1000) {
-        this.setElementProperty("#strMinLength", "value", minLen);
+        this.changeInputValue("#strMinLength", minLen);
         this.clickElement("[name='stringSearch']");
 
         await sleep(waitTime)
@@ -106,6 +106,20 @@ class ExtensionPage extends WebPage {
         }
 
         return results;
+    }
+
+    async getBookmarks() {
+        return await this.getElements("#bookmarks tbody>tr");
+    }
+
+    async bookmarkToggleFreeze(bookmarkIndex) {
+        const realIndex = parseInt(bookmarkIndex) + 1;
+        await this.clickElement(`#bookmarks tbody>tr:nth-child(${realIndex})>td:nth-child(3)>button`);
+    }
+
+    async modifyBookmarkValue(bookmarkIndex, value) {
+        const realIndex = parseInt(bookmarkIndex) + 1;
+        await this.changeInputValue(`#bookmarks tbody>tr:nth-child(${realIndex})>td:nth-child(2)>input`, value);
     }
 }
 
