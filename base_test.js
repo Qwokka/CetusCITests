@@ -121,6 +121,11 @@ class ExtensionPage extends WebPage {
         const realIndex = parseInt(bookmarkIndex) + 1;
         await this.changeInputValue(`#bookmarks tbody>tr:nth-child(${realIndex})>td:nth-child(2)>input`, value);
     }
+
+    async uiToggleSpeedhack(multiplier = 1) {
+        await this.changeInputValue("#shRange", multiplier);
+        await this.clickElement("#toggleSpeedhack");
+    }
 }
 
 class GamePage extends WebPage {
