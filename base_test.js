@@ -81,6 +81,32 @@ class ExtensionPage extends WebPage {
     async getBookmarks() {
         return await this.getElements("#bookmarks tbody>tr");
     }
+
+    // TODO Support changing string type
+    async uiStringSearch(minLen, waitTime = 1000) {
+        this.setElementProperty("#strMinLength", "value", minLen);
+        this.clickElement("[name='stringSearch']");
+
+        await sleep(waitTime)
+
+        const resultTDs = await this.getElements("tr[name='strResultRow']>td");
+
+        const results = [];
+
+        for (let i = 0; i < resultTDs.length; i += 2) {
+            const thisResult = {};
+
+            let textProperty = await resultTDs[i].getProperty("innerText");
+            thisResult.address = await textProperty.jsonValue();
+
+            textProperty = await resultTDs[i + 1].getProperty("innerText");
+            thisResult.value = await textProperty.jsonValue();
+
+            results.push(thisResult);
+        }
+
+        return results;
+    }
 }
 
 class GamePage extends WebPage {
@@ -131,6 +157,12 @@ class GamePage extends WebPage {
         return await this.page.evaluate(function(modifyAddress, value, type) {
             cetusInstances.get(0).modifyMemory(modifyAddress, value, type);
         }, address, value, type);
+    }
+
+    async consoleSetSpeedhackMultiplier(multiplier) {
+        return await this.page.evaluate(function(multiplier) {
+            cetusInstances.get(0).setSpeedhackMultiplier(multiplier);
+        }, multiplier);
     }
 }
 

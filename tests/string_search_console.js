@@ -13,10 +13,11 @@ class Test extends BaseTest {
         await extPage.assertUnlocked();
         await gamePage.assertInitialized();
 
-        const searchResults = await gamePage.consoleStringSearch(4);
+        let searchResults = await gamePage.consoleStringSearch(4);
 
         let found = false;
 
+        // First search should found our target string
         for (const key in searchResults) {
             const string = searchResults[key];
 
@@ -26,7 +27,25 @@ class Test extends BaseTest {
             }
         }
 
-        return found;
+        if (!found) {
+            throw new Error("String search failed");
+        }
+
+        searchResults = await gamePage.consoleStringSearch(20);
+
+        found = false;
+
+        // Second search should not find our target string if minLength is being respected
+        for (const key in searchResults) {
+            const string = searchResults[key];
+
+            if (string === "hihellohowareyou") {
+                found = true;
+                break;
+            }
+        }
+
+        return !found;
     }
 };
 

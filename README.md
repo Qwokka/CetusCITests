@@ -15,7 +15,7 @@ Automated tests for Cetus (https://github.com/Qwokka/Cetus)
 - [x] Memory searching via `Cetus.search()`
 - [x] Memory searching via UI
 - [x] String search via `Cetus.strings()`
-- [ ] String search via UI
+- [x] String search via UI
 - [ ] Add bookmarks via `Cetus.addBookmark()`
 - [x] Add bookmarks via UI
 - [ ] Remove bookmark via Javascript (Not yet implemented)
@@ -34,7 +34,7 @@ Automated tests for Cetus (https://github.com/Qwokka/Cetus)
 
 ### Speedhack
 
-- [ ] Enable/disable speedhack via `Cetus.setSpeedhackMultipler()`
+- [x] Enable/disable speedhack via `Cetus.setSpeedhackMultipler()`
 - [ ] Enable/disable speedhack via UI
 
 ### Patching
