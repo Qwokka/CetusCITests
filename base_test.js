@@ -126,6 +126,13 @@ class ExtensionPage extends WebPage {
         await this.changeInputValue("#shRange", multiplier);
         await this.clickElement("#toggleSpeedhack");
     }
+
+    async changeSelectedInstance(instanceIndex) {
+        await this.page.$eval("#selectInstances", function(element, instanceIndex) {
+            element.selectedIndex = instanceIndex;
+            element.dispatchEvent(new Event('change'));
+        }, instanceIndex);
+    }
 }
 
 class GamePage extends WebPage {

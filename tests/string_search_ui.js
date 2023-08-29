@@ -4,7 +4,7 @@ import { createGamePage } from '../utils.js';
 class Test extends BaseTest {
     name = "String Search (UI)";
     description = "Tests string searching from the Cetus Javascript API";
-    usesUi = false;
+    usesUi = true;
     instantiationMethods = [ "instantiate" ];
 
     async run(browser, extPage, method) {
