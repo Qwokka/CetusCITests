@@ -39,6 +39,8 @@ class Test extends BaseTest {
             return saveButton.getAttribute("address");
         });
 
+        await sleep(200);
+
         await extPage.bookmarkToggleFreeze(1);
         await extPage.modifyBookmarkValue(1, 1111);
 

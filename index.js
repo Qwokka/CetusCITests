@@ -77,7 +77,7 @@ else {
 const webserver = express(); 
 
 webserver.use(express.static("binaries/build"));
-webserver.listen(8080);
+const server = webserver.listen(8080);
 
 for (let i = 0; i < files.length; i++) {
     const thisFile = files[i];
@@ -95,3 +95,5 @@ for (let i = 0; i < files.length; i++) {
         await runTest(currentTest)
     }
 }
+
+server.close();
