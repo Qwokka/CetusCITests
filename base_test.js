@@ -7,7 +7,7 @@ class BaseTest {
     // TODO Also handle "WebAssembly.Module()" combined with "WebAssembly.Instance()"
     instantiationMethods = [ "instantiate", "instantiateStreaming" ];
 
-    async run(browser, extPage, method) {
+    async run(browser, method) {
         assert(false);
     }
 }

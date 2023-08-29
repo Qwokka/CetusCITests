@@ -1,5 +1,5 @@
 import { BaseTest } from '../base_test.js';
-import { createGamePage } from '../utils.js';
+import { createGameAndExtPages } from '../utils.js';
 
 class Test extends BaseTest {
     name = "String Search (Console)";
@@ -7,8 +7,8 @@ class Test extends BaseTest {
     usesUi = false;
     instantiationMethods = [ "instantiate" ];
 
-    async run(browser, extPage, method) {
-        const gamePage = await createGamePage(browser, "strings", method);
+    async run(browser, method, panelType) {
+        const { gamePage, extPage } = await createGameAndExtPages(browser, "strings", method, panelType);
 
         await extPage.assertUnlocked();
         await gamePage.assertInitialized();

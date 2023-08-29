@@ -1,5 +1,5 @@
 import { BaseTest } from '../base_test.js';
-import { createGamePage, sleep } from '../utils.js';
+import { createGameAndExtPages, sleep } from '../utils.js';
 
 class Test extends BaseTest {
     name = "Multi Bookmark / Single Instance";
@@ -7,8 +7,8 @@ class Test extends BaseTest {
     usesUi = true;
     instantiationMethods = [ "instantiate" ];
 
-    async run(browser, extPage, method) {
-        const gamePage = await createGamePage(browser, "multivalue", method);
+    async run(browser, method, panelType) {
+        const { gamePage, extPage } = await createGameAndExtPages(browser, "multivalue", method, panelType);
 
         await extPage.assertUnlocked();
         await gamePage.assertInitialized();

@@ -1,15 +1,16 @@
 import { ArgumentParser } from 'argparse';
 import { globSync } from 'glob';
 import { ExtensionPage } from './base_test.js';
-import { createPage } from './utils.js';
 import puppeteer from 'puppeteer';
+import express from 'express';
 
-const PANEL_TYPES = [ "devpanel", "popup" ];
+const PANEL_TYPES = [ "devpanelview.html", "popupview.html" ];
 const INSTANTIATE_METHODS = [ "instantiate", "instantiateStreaming" ];
 
-const launchBrowser = async function(cetusDir, type) {
+const launchBrowser = async function(cetusDir) {
     const browser = await puppeteer.launch({
-        headless: "new",
+        headless: false,
+        devtools: true,
         args: [
             "--disable-extensions-except=" + cetusDir,
             "--load-extension=" + cetusDir,
@@ -18,35 +19,13 @@ const launchBrowser = async function(cetusDir, type) {
         ],
     });
 
-    const targets = await browser.targets();
-    const extensionTarget = targets.find(target => target.url().includes('chrome-extension'));
-    const partialExtensionUrl = extensionTarget.url() || '';
-    const extensionId = partialExtensionUrl.split('/')[2];
-
-    let extensionUrl;
-
-    if (type === "devpanel") {
-        extensionUrl = `chrome-extension://${extensionId}/extension/devpanelview.html`;
-    }
-    else if (type === "popup") {
-        extensionUrl = `chrome-extension://${extensionId}/extension/popupview.html`;
-    }
-    else {
-        throw new Error(`Unexpected type: \"${type}\"`);
-    }
-
-    const newPage = await createPage(browser, extensionUrl);
-    const extPage = new ExtensionPage(newPage);
-
-    return {
-        browser,
-        extPage,
-    };
+    return browser;
 }
 
 const runTest = async function(currentTest, panelType = null) {
     for (let instantiateMethod of currentTest.instantiationMethods) {
-        const { browser, extPage } = await launchBrowser(args.directory, panelType === null ? "devpanel" : panelType);
+        const browser = await launchBrowser(args.directory, panelType === null ? "devpanel" : panelType);
+        const realPanel = panelType === null ? "devpanelview.html" : panelType;
 
         if (panelType !== null) {
             console.log(`[*] Running test ${currentTest.name} for view \"${panelType}\" and method \"${instantiateMethod}\"`);
@@ -56,7 +35,7 @@ const runTest = async function(currentTest, panelType = null) {
         }
 
         try {
-            const result = await currentTest.run(browser, extPage, instantiateMethod);
+            const result = await currentTest.run(browser, instantiateMethod, realPanel);
 
             if (result !== true) {
                 throw new Error(result);
@@ -65,6 +44,7 @@ const runTest = async function(currentTest, panelType = null) {
             console.log(`[+] Test \"${currentTest.name}\" succeeded`);
         } catch (e) {
             console.error(`[-] Test \"${currentTest.name}\" failed: ${e.message}`);
+            console.log(e);
 
             if (!args.continueAfterFail) {
                 process.exit(1);
@@ -93,6 +73,11 @@ if (args.test) {
 else {
     files = globSync("./tests/*.js");
 }
+
+const webserver = express(); 
+
+webserver.use(express.static("binaries/build"));
+webserver.listen(8080);
 
 for (let i = 0; i < files.length; i++) {
     const thisFile = files[i];
