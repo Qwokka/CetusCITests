@@ -3,6 +3,7 @@ import { globSync } from 'glob';
 import { ExtensionPage } from './base_test.js';
 import puppeteer from 'puppeteer';
 import express from 'express';
+import path from 'path';
 
 const PANEL_TYPES = [ "devpanelview.html", "popupview.html" ];
 const INSTANTIATE_METHODS = [ "instantiate", "instantiateStreaming" ];
@@ -67,11 +68,13 @@ const args = argParser.parse_args();
 
 let files;
 
+const dirname = path.resolve();
+
 if (args.test) {
-    files = [ __dirname + "/tests/" + args.test + ".js" ];
+    files = [ dirname + "/tests/" + args.test + ".js" ];
 }
 else {
-    files = globSync(__dirname + "/tests/*.js");
+    files = globSync(dirname + "/tests/*.js");
 }
 
 const webserver = express(); 
