@@ -27,7 +27,7 @@ class Test extends BaseTest {
         await gamePage.consoleSetSpeedhackMultiplier(10);
 
         await gamePage.consoleModifyMemory(MEMORY_ADDR, "1337", "i32");
-        await sleep(150);
+        await sleep(300);
 
         resetValue = await gamePage.consoleQueryMemory(MEMORY_ADDR, "i32");
         if (resetValue !== 1234) {
@@ -36,7 +36,7 @@ class Test extends BaseTest {
 
         await gamePage.consoleSetSpeedhackMultiplier(1);
         await gamePage.consoleModifyMemory(MEMORY_ADDR, "1337", "i32");
-        await sleep(150);
+        await sleep(300);
 
         resetValue = await gamePage.consoleQueryMemory(MEMORY_ADDR, "i32");
         if (resetValue !== 1337) {
