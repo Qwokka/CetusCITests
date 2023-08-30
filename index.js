@@ -68,10 +68,10 @@ const args = argParser.parse_args();
 let files;
 
 if (args.test) {
-    files = [ "./tests/" + args.test + ".js" ];
+    files = [ __dirname + "/tests/" + args.test + ".js" ];
 }
 else {
-    files = globSync("./tests/*.js");
+    files = globSync(__dirname + "/tests/*.js");
 }
 
 const webserver = express(); 
