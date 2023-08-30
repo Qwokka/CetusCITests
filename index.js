@@ -81,7 +81,7 @@ else {
 
 const webserver = express(); 
 
-webserver.use(express.static("binaries/build"));
+webserver.use(express.static(__dirname + "binaries/build"));
 const server = webserver.listen(8080);
 
 for (let i = 0; i < files.length; i++) {
