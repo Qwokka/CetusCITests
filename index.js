@@ -3,7 +3,11 @@ import { globSync } from 'glob';
 import { ExtensionPage } from './base_test.js';
 import puppeteer from 'puppeteer';
 import express from 'express';
-import path from 'path';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 const PANEL_TYPES = [ "devpanelview.html", "popupview.html" ];
 const INSTANTIATE_METHODS = [ "instantiate", "instantiateStreaming" ];
@@ -68,13 +72,11 @@ const args = argParser.parse_args();
 
 let files;
 
-const dirname = path.resolve();
-
 if (args.test) {
-    files = [ dirname + "/tests/" + args.test + ".js" ];
+    files = [ __dirname + "/tests/" + args.test + ".js" ];
 }
 else {
-    files = globSync(dirname + "/tests/*.js");
+    files = globSync(__dirname + "/tests/*.js");
 }
 
 const webserver = express(); 
@@ -85,7 +87,7 @@ const server = webserver.listen(8080);
 for (let i = 0; i < files.length; i++) {
     const thisFile = files[i];
 
-    const Test = (await import(`./${thisFile}`)).default;
+    const Test = (await import(thisFile)).default;
     const currentTest = new Test();
 
     // If the test requires the UI, we run it twice (Once per view)
