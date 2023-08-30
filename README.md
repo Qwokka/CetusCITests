@@ -35,8 +35,8 @@ Automated tests for Cetus (https://github.com/Qwokka/Cetus)
 
 ### Speedhack
 
-- [x] Enable/disable speedhack via `Cetus.setSpeedhackMultipler()`
-- [x] Enable/disable speedhack via UI
+- [ ] Enable/disable speedhack via `Cetus.setSpeedhackMultipler()`
+- [ ] Enable/disable speedhack via UI
 
 ### Patching
 
